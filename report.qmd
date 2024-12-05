@@ -1,0 +1,33 @@
+---
+title: "Penguins Report"
+format: html
+execute: 
+  echo: false
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+params:
+  island: "Biscoe"
+---
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+This is a report about penguins on `r params$island` island.
+
+```{r}
+penguins |> 
+  filter(island == params$island) |> 
+  group_by(sex) |> 
+  summarize(avg_bill_length = mean(bill_length_mm, na.rm = TRUE)) |> 
+  ungroup() |> 
+  drop_na(sex) |> 
+  ggplot(aes(x = sex, y = avg_bill_length)) +
+  geom_col() +
+  labs(title = str_glue("Average bill length by sex on {params$island} island"))
+```
+
+
